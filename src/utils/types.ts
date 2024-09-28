@@ -1,6 +1,8 @@
 export interface Photo {
   id: string;
   alt_description: string;
+  height: number;
+  width: number;
   urls: {
     small: string;
     full: string;
