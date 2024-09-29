@@ -16,6 +16,8 @@ interface MasonryGridProps {
   gap?: number;
 }
 
+const PRELOAD_COUNT = 3;
+
 const Wrapper = styled.div<{ $gap: number }>`
   display: flex;
   gap: ${({ $gap }) => $gap}px;
@@ -35,7 +37,7 @@ const Image = styled.img`
   display: block;
 `;
 
-export const MasonryGrid: React.FC<MasonryGridProps> = ({
+export const MasonryGrid2: React.FC<MasonryGridProps> = ({
   photos,
   breakpoints = [600, 900, 1300],
   gap = 10,
@@ -85,9 +87,14 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     <Wrapper ref={containerRef} $gap={gap}>
       {columns.map((column, columnIndex) => (
         <Column $gap={gap} key={columnIndex}>
-          {column.map((image) => (
+          {column.map((image, imageIndex) => (
             <Link key={image.id} to={`/photos/${image.id}`}>
-              <Image src={image.urls.small} alt={image.alt_description} />
+              <Image
+                data-id={image.id}
+                src={image.urls.small}
+                loading={imageIndex < PRELOAD_COUNT ? "eager" : "lazy"}
+                alt={image.alt_description}
+              />
             </Link>
           ))}
         </Column>
