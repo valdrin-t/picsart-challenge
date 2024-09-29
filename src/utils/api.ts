@@ -6,8 +6,6 @@ const headers = { Authorization: `Client-ID ${UnsplashAccessKey}` };
 export const getPhotoById = async (id: string) => {
   const response = await fetch(`${unsplashUrl}/${id}`, { headers });
 
-  console.log("response", response);
-
   if (!response.ok) {
     throw new Error("Failed to fetch photo");
   }

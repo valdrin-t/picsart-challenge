@@ -1,3 +1,4 @@
+import { LoadingSkeleton } from "@/components/LoadingSkeleton";
 import { useWindowWidth } from "@/hooks/useWindowWidth";
 import { Photo } from "@/utils/types";
 import React, {
@@ -37,7 +38,7 @@ const Image = styled.img`
   display: block;
 `;
 
-export const MasonryGrid2: React.FC<MasonryGridProps> = ({
+export const MasonryGrid: React.FC<MasonryGridProps> = ({
   photos,
   breakpoints = [600, 900, 1300],
   gap = 10,
@@ -85,20 +86,22 @@ export const MasonryGrid2: React.FC<MasonryGridProps> = ({
 
   return (
     <Wrapper ref={containerRef} $gap={gap}>
-      {columns.map((column, columnIndex) => (
-        <Column $gap={gap} key={columnIndex}>
-          {column.map((image, imageIndex) => (
-            <Link key={image.id} to={`/photos/${image.id}`}>
-              <Image
-                data-id={image.id}
-                src={image.urls.small}
-                loading={imageIndex < PRELOAD_COUNT ? "eager" : "lazy"}
-                alt={image.alt_description}
-              />
-            </Link>
-          ))}
-        </Column>
-      ))}
+      <LoadingSkeleton height="100vh" isVisible={columns.length === 0}>
+        {columns.map((column, columnIndex) => (
+          <Column $gap={gap} key={columnIndex}>
+            {column.map((image, imageIndex) => (
+              <Link key={image.id} to={`/photos/${image.id}`}>
+                <Image
+                  data-id={image.id}
+                  src={image.urls.small}
+                  loading={imageIndex < PRELOAD_COUNT ? "eager" : "lazy"}
+                  alt={image.alt_description}
+                />
+              </Link>
+            ))}
+          </Column>
+        ))}
+      </LoadingSkeleton>
     </Wrapper>
   );
 };
