@@ -46,7 +46,7 @@ This project implements a responsive masonry grid layout with infinite scrolling
 
    ```
    git clone https://github.com/valdrin-t/picsart-challenge.git
-   cd [project-directory]
+   cd picsart-challenge
    ```
 
 2. Install dependencies:
