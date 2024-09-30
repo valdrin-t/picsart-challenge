@@ -1,50 +1,80 @@
-# React + TypeScript + Vite
+# Masonry Layout with Infinite Scroll
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project implements a responsive masonry grid layout with infinite scrolling, showcasing images fetched from the Unsplash API. It's built using React and TypeScript, focusing on performance and user experience.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Responsive masonry grid layout
+- Infinite scrolling
+- Lazy loading of images
+- Error handling
+- TypeScript implementation
 
-## Expanding the ESLint configuration
+## Performance Optimizations
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. **Lazy Loading**: Images are loaded lazily using the `loading="lazy"` attribute, reducing initial load time and conserving bandwidth.
 
-- Configure the top-level `parserOptions` property like this:
+2. **Infinite Scroll**: Instead of loading all images at once, new images are fetched as the user scrolls, improving initial page load time and reducing memory usage.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+3. **Memoization**: The `useMemo` and `useCallback` hooks are used to prevent unnecessary recalculations and re-renders.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+4. **Virtualization**: Images sources are loaded on demand, as user scrolls close to them, to minimize bandwidth usage
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+5. **Intersection Observer**: Used for triggering infinite scroll, providing a smoother scrolling experience compared to scroll event listeners.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Project Structure
+
+- components/
+  - `ErrorContainer.tsx`: Error container component for displaying error messages.
+  - `InfiniteScrollTrigger.tsx`: Component that triggers loading more photos when scrolled into view.
+  - `LoadingSkeleton.tsx`: Skeleton loader component for displaying loading state.
+  - `MasonryGrid.tsx`: Implements the masonry grid layout.
+- hooks/
+  - `useGetPhotos.tsx`: Custom hook for fetching photos from the Unsplash API.
+  - `useGetPhotoById.tsx`: Custom hook for fetching a specific photo by Id.
+  - `useVirtualization.tsx`: Custom hook for virtualizing the grid layout.
+  - `useWindowWidth.tsx`: Custom hook for detecting window width.
+- routes/
+  - `root.tsx`: Main component that handles the overall layout and state management.
+  - `details.tsx`: Details view, displaying more information about the selected photo
+- utils/
+  - `api.ts`: Utility functions for interacting with the Unsplash API.
+
+## Setup and Running the Project
+
+1. Clone the repository:
+
+   ```
+   <!-- TODO: Add url -->
+   git clone [repository-url]
+   cd [project-directory]
+   ```
+
+2. Install dependencies:
+
+   ```
+   npm install
+   ```
+
+3. In the .env file provide your Unsplash API key.
+
+   ```
+   VITE_UNSPLASH_ACCESS_KEY=your_access_key_here
+   ```
+
+4. Start the development server:
+
+   ```
+   npm run dev
+   ```
+
+5. Open `http://localhost:5173` in your browser to view the app.
+
+## Future Improvements
+
+1. Implement better virtualization, by adding and removing elements from the dom as necessary.
+2. Render the initial layout in the server side, and preload the first few images to better improve LCP score
+3. Calculate initial heights for the items to reduce layout shift
+4. Implement progressive image loading (low-res thumbnails first, then high-res images).
+5. Add unit and integration tests.
+6. Implement search functionality
