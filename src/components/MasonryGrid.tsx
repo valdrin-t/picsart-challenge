@@ -17,8 +17,6 @@ interface MasonryGridProps {
   gap?: number;
 }
 
-const PRELOAD_COUNT = 3;
-
 const Wrapper = styled.div<{ $gap: number }>`
   display: flex;
   gap: ${({ $gap }) => $gap}px;
@@ -37,6 +35,17 @@ const Image = styled.img`
   height: auto;
   display: block;
 `;
+
+const MemoizedImage = React.memo(({ image }: { image: Photo }) => (
+  <Link to={`/photos/${image.id}`}>
+    <Image
+      srcSet={`${image.urls.small} 1x, ${image.urls.regular} 2x`}
+      src={image.urls.small}
+      alt={image.alt_description}
+      loading="lazy"
+    />
+  </Link>
+));
 
 export const MasonryGrid: React.FC<MasonryGridProps> = ({
   photos,
@@ -89,15 +98,8 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
       <LoadingSkeleton height="100vh" isVisible={columns.length === 0}>
         {columns.map((column, columnIndex) => (
           <Column $gap={gap} key={columnIndex}>
-            {column.map((image, imageIndex) => (
-              <Link key={image.id} to={`/photos/${image.id}`}>
-                <Image
-                  data-id={image.id}
-                  src={image.urls.small}
-                  loading={imageIndex < PRELOAD_COUNT ? "eager" : "lazy"}
-                  alt={image.alt_description}
-                />
-              </Link>
+            {column.map((image) => (
+              <MemoizedImage image={image} key={image.id} />
             ))}
           </Column>
         ))}
