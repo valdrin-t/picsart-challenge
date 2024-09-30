@@ -2,9 +2,14 @@ import { Photo } from "@/utils/types";
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Note:  This hook is not being used but it's kept for reference on how
- * an alternative approach to virtualization could be implemented.
- * For example, this could be used to add fadein animations to new images being loaded.
+ * Provides a hook for virtualizing a list of images based on their visibility
+ * in the viewport. This hook will return an object containing a set of visible
+ * image IDs and a reference to a map of image elements.
+ *
+ * @param columns A 2D array of photos, where each inner array is a column of
+ * photos.
+ * @returns An object containing the visible image IDs and a reference to the
+ * image elements.
  */
 export const useVirtualization = (columns: Photo[][]) => {
   const [visibleImages, setVisibleImages] = useState<Set<string>>(new Set());
@@ -24,7 +29,7 @@ export const useVirtualization = (columns: Photo[][]) => {
       },
       {
         root: null,
-        rootMargin: "10px",
+        rootMargin: "100px",
         threshold: 0.1,
       }
     );

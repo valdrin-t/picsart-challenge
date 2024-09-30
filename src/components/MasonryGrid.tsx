@@ -1,4 +1,5 @@
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
+import { useVirtualization } from "@/hooks/useVirtualization";
 import { useWindowWidth } from "@/hooks/useWindowWidth";
 import { Photo } from "@/utils/types";
 import React, {
@@ -36,17 +37,6 @@ const Image = styled.img`
   display: block;
 `;
 
-const MemoizedImage = React.memo(({ image }: { image: Photo }) => (
-  <Link to={`/photos/${image.id}`}>
-    <Image
-      srcSet={`${image.urls.small} 1x, ${image.urls.regular} 2x`}
-      src={image.urls.small}
-      alt={image.alt_description}
-      loading="lazy"
-    />
-  </Link>
-));
-
 export const MasonryGrid: React.FC<MasonryGridProps> = ({
   photos,
   breakpoints = [600, 900, 1300],
@@ -55,6 +45,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   const windowWidth = useWindowWidth();
   const containerRef = useRef<HTMLDivElement>(null);
   const [columns, setColumns] = useState<Photo[][]>([]);
+  const { imageRefs, visibleImages } = useVirtualization(columns);
 
   // Calculate the number of columns
   const columnCount = useMemo(
@@ -99,7 +90,15 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
         {columns.map((column, columnIndex) => (
           <Column $gap={gap} key={columnIndex}>
             {column.map((image) => (
-              <MemoizedImage image={image} key={image.id} />
+              <Link key={image.id} to={`/photos/${image.id}`}>
+                <Image
+                  ref={(el) => el && imageRefs.current.set(image.id, el)}
+                  srcSet={`${image.urls.small} 1x, ${image.urls.regular} 2x`}
+                  src={visibleImages.has(image.id) ? image.urls.small : ""}
+                  alt={image.alt_description}
+                  loading="lazy"
+                />
+              </Link>
             ))}
           </Column>
         ))}
