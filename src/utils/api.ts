@@ -1,4 +1,4 @@
-import { UnsplashAccessKey } from "@/utils/config";
+const UnsplashAccessKey = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
 
 const unsplashUrl = "https://api.unsplash.com/photos";
 const headers = { Authorization: `Client-ID ${UnsplashAccessKey}` };
