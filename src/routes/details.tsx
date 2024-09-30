@@ -1,6 +1,6 @@
 import { ErrorContainer } from "@/components/ErrorContainer";
 import { LoadingSkeleton } from "@/components/LoadingSkeleton";
-import useGetPhotoById from "@/hooks/useGetPhotoById";
+import { useGetPhotoById } from "@/hooks/useGetPhotoById";
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
